@@ -14,18 +14,18 @@ gEngine.Core = (function () {
       var i;
       for (i = 0; i < mAllObjects.length; i++) {
           mContext.strokeStyle = 'blue';
-          if (i === gObjectNum)
-              mContext.strokeStyle = 'red';
+          //if (i === gObjectNum)
+          //    mContext.strokeStyle = 'red';
           mAllObjects[i].draw(mContext);
       }
   };
   const updateUIEcho = function() {
-    document.getElementById("uiEchoString").innerHTML =
+    /*document.getElementById("uiEchoString").innerHTML =
 `<ul style="margin:-10px">
   <li>Id:${gObjectNum}</li>
   <li>Center: ${mAllObjects[gObjectNum].mCenter.x.toPrecision(3)}, ${mAllObjects[gObjectNum].mCenter.y.toPrecision(3)}</li>
   <li>Angle: ${mAllObjects[gObjectNum].mAngle.toPrecision(3)}</li>
-</ul>`;}
+</ul>`;*/}
 
   const update = function() {
     for (let i = 0; i < mAllObjects.length; i++) {

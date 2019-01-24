@@ -1,3 +1,6 @@
+const Vec2 = require('../Lib/Vec2');
+const gEngine = require('../EngineCore/gEngine');
+
 function RigidShape(center) {
   this.mCenter = center;
   this.mAngle = 0;

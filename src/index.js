@@ -1,6 +1,7 @@
-const gEngine = require();
-const Vec2 = require();
-const Rectangle = require();
+const gEngine = require('./EngineCore/gEngine');
+const Vec2 = require('./Lib/Vec2');
+const Rectangle = require('./RigidBody/Rectangle');
+const userControl = require('./userControl');
 
 function InitializeGame() {
   const width = gEngine.Core.mWidth;

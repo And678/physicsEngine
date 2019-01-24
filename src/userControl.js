@@ -1,4 +1,6 @@
-const gEngine = require();
+const gEngine = require('./EngineCore/gEngine');
+const Circle = require('./RigidBody/Circle');
+const Vec2 = require('./Lib/Vec2');
 
 let gObjectNum = 0;
 function userControl(event) {
