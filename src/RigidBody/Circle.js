@@ -3,7 +3,7 @@ const Vec2 = require('../Lib/Vec2');
 
 const Circle = function(center, radius, fix) {
   RigidShape.call(this, center);
-  this.mFix = fix;
+  this.mBoundRadius = radius;
   this.mType = "Circle";
   this.mRadius = radius;
 

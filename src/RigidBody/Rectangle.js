@@ -6,7 +6,7 @@ const Rectangle = function(center, width, height, fix) {
   this.mType = "Rectangle";
   this.mWidth = width;
   this.mHeight = height;
-  this.mFix = fix;
+  this.mBoundRadius = Math.sqrt(width * width + height * height) / 2;
   this.mVertex = [];
   this.mFaceNormal = [];
 

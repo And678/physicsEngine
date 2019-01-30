@@ -24,13 +24,12 @@ function userControl(event) {
   if (keycode >= 48 && keycode <= 57) {
     gEngine.Core.objectNum = keycode - 48;
   }
-
+  //fg
   if (keycode === 38) {
     if (gEngine.Core.objectNum) {
       gEngine.Core.objectNum--;
     }
   }
-
   if (keycode === 40) {
     if (gEngine.Core.objectNum < gEngine.Core.mAllObjects.length - 1) {
       gEngine.Core.objectNum++;
@@ -49,15 +48,12 @@ function userControl(event) {
   if (keycode === 68) {
     gEngine.Core.mAllObjects[gEngine.Core.objectNum].move(new Vec2(10, 0));
   }
-  //qeh
+  //qe
   if (keycode === 81) {
     gEngine.Core.mAllObjects[gEngine.Core.objectNum].rotate(-0.1);
   }
   if (keycode === 69) {
     gEngine.Core.mAllObjects[gEngine.Core.objectNum].rotate(0.1);
-  }
-  if (keycode === 72) {
-    gEngine.Core.mAllObjects[gEngine.Core.objectNum].mFix = !gEngine.Core.mAllObjects[gEngine.Core.objectNum].mFix;
   }
 }
 
