@@ -2,7 +2,7 @@ const gEngine = {};
 gEngine.Core = (function () {
   const mHeight = 450;
   const mWidth = 800;
-
+  let _objectNum = 0;
   const mCanvas = document.getElementById('canvas');
   const mContext = mCanvas.getContext('2d');
   mCanvas.height = mHeight;
@@ -14,18 +14,18 @@ gEngine.Core = (function () {
       var i;
       for (i = 0; i < mAllObjects.length; i++) {
           mContext.strokeStyle = 'blue';
-          //if (i === gObjectNum)
-          //    mContext.strokeStyle = 'red';
+          if (i === _objectNum)
+              mContext.strokeStyle = 'red';
           mAllObjects[i].draw(mContext);
       }
   };
   const updateUIEcho = function() {
-    /*document.getElementById("uiEchoString").innerHTML =
+    document.getElementById("uiEchoString").innerHTML =
 `<ul style="margin:-10px">
-  <li>Id:${gObjectNum}</li>
-  <li>Center: ${mAllObjects[gObjectNum].mCenter.x.toPrecision(3)}, ${mAllObjects[gObjectNum].mCenter.y.toPrecision(3)}</li>
-  <li>Angle: ${mAllObjects[gObjectNum].mAngle.toPrecision(3)}</li>
-</ul>`;*/}
+  <li>Id:${_objectNum}</li>
+  <li>Center: ${mAllObjects[_objectNum].mCenter.x.toPrecision(3)}, ${mAllObjects[_objectNum].mCenter.y.toPrecision(3)}</li>
+  <li>Angle: ${mAllObjects[_objectNum].mAngle.toPrecision(3)}</li>
+</ul>`;}
 
   const update = function() {
     for (let i = 0; i < mAllObjects.length; i++) {
@@ -65,7 +65,13 @@ gEngine.Core = (function () {
     mAllObjects,
     mWidth,
     mHeight,
-    mContext
+    mContext,
+    set objectNum(val) {
+      _objectNum = val;
+    },
+    get objectNum() {
+      return _objectNum;
+    }
   };
 
 
