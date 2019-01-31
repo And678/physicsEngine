@@ -46,6 +46,8 @@ function runGameLoop() {
   requestAnimationFrame(function() {
     runGameLoop();
   });
+  updateUIEcho();
+  draw();
   const mCurrentTime = Date.now();
   mElapsedTime = mCurrentTime - mPreviousTime;
   mPreviousTime = mCurrentTime;
@@ -55,8 +57,6 @@ function runGameLoop() {
     gEngine.Physics.collision();
     update();
   }
-  updateUIEcho();
-  draw();
 }
 function initializeEngineCore() {
   runGameLoop();

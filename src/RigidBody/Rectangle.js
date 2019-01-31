@@ -55,4 +55,11 @@ Rectangle.prototype.rotate = function(angle) {
   return this;
 }
 
+Rectangle.prototype.collisionTest = function (otherShape, collisionInfo) {
+  if (otherShape.mType === 'Circle') {
+    return false;
+  }
+  return false;
+}
+
 module.exports = Rectangle;
