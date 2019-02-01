@@ -1,5 +1,7 @@
 const RigidShape = require("./RigidShape");
 const Vec2 = require('../Lib/Vec2');
+const CollisionInfo = require('../Lib/CollisionInfo');
+
 
 const Rectangle = function(center, width, height, fix) {
   RigidShape.call(this, center);
@@ -58,8 +60,80 @@ Rectangle.prototype.rotate = function(angle) {
 Rectangle.prototype.collisionTest = function (otherShape, collisionInfo) {
   if (otherShape.mType === 'Circle') {
     return false;
+  } else if (otherShape.mType === 'Rectangle') {
+    return this.collidedRectRect(this, otherShape, collisionInfo);
   }
   return false;
+}
+
+Rectangle.prototype.collidedRectRect = function(r1, r2, collisionInfo) {
+  let status1 = false;
+  let status2 = false;
+  const collisionInfoR1 = new CollisionInfo();
+  const collisionInfoR2 = new CollisionInfo();
+  status1 = r1.findAxisLeastPenetration(r2, collisionInfoR1);
+  if (status1) {
+    status2 = r2.findAxisLeastPenetration(r1, collisionInfoR2);
+    if (status2) {
+      if (collisionInfoR1.getDepth() < collisionInfoR2.getDepth()) {
+        const depthVec = collisionInfoR1.getNormal().scale(collisionInfoR1.getDepth());
+        collisionInfo.setInfo(collisionInfoR1.getDepth(), collisionInfoR1.getNormal(), collisionInfoR1.mStart.subtract(depthVec));
+      } else {
+        collisionInfo.setInfo(collisionInfoR2.getDepth(), collisionInfoR1.getNormal().scale(-1), collisionInfoR1.mStart);
+      }
+    }
+  }
+  return status1 && status2;
+}
+
+Rectangle.prototype.findSupportPoint = function (dir, ptOnEdge) {
+  let vToEdge;
+  let projection;
+  const tmpSupport = {};
+
+  tmpSupport.mSupportPointDist = -9999999;
+  tmpSupport.mSupportPoint = null;
+
+  for (let i = 0; i < this.mVertex.length; i++) {
+    vToEdge = this.mVertex[i].subtract(ptOnEdge);
+    projection = vToEdge.dot(dir);            //  Suspicious
+
+    if ((projection > 0) && (projection > tmpSupport.mSupportPointDist)) {
+      tmpSupport.mSupportPoint = this.mVertex[i];
+      tmpSupport.mSupportPointDist = projection;
+    }
+  }
+  return tmpSupport;
+}
+
+Rectangle.prototype.findAxisLeastPenetration = function (otherRect, collisionInfo) {
+  let supportPoint;
+  let bestDistance = 9999999;
+  let bestIndex = null;
+  let hasSupport = true;
+  let i = 0;
+
+  while (hasSupport && i < this.mFaceNormal.length) {
+    const dir = this.mFaceNormal[i].scale(-1);
+    const ptOnEdge = this.mVertex[i];
+
+    const tmpSupport = otherRect.findSupportPoint(dir, ptOnEdge);
+
+    hasSupport = (tmpSupport.mSupportPoint !== null);
+
+    if (hasSupport && tmpSupport.mSupportPointDist < bestDistance) {
+      bestDistance = tmpSupport.mSupportPointDist;
+      bestIndex = i;
+      supportPoint = tmpSupport.mSupportPoint;
+    }
+    i = i + 1;
+  }
+
+  if (hasSupport) {
+    const bestVec = this.mFaceNormal[bestIndex].scale(bestDistance);
+    collisionInfo.setInfo(bestDistance, this.mFaceNormal[bestIndex], supportPoint.add(bestVec));
+  }
+  return hasSupport;
 }
 
 module.exports = Rectangle;
