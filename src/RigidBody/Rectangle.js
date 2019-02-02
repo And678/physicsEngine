@@ -59,11 +59,79 @@ Rectangle.prototype.rotate = function(angle) {
 
 Rectangle.prototype.collisionTest = function (otherShape, collisionInfo) {
   if (otherShape.mType === 'Circle') {
-    return false;
+    return this.collidedRectCirc(otherShape, collisionInfo);
   } else if (otherShape.mType === 'Rectangle') {
     return this.collidedRectRect(this, otherShape, collisionInfo);
   }
   return false;
+}
+
+Rectangle.prototype.collidedRectCirc = function(otherCirc, collisionInfo) {
+
+
+  let bestDistance = -999999;
+  let nearestEdge = -1;
+  let inside = true;
+
+  // Calculate the nearest edge
+  for (let i = 0; i < 4; i++) {
+
+    const v = otherCirc.mCenter.subtract(this.mVertex[i]);
+    const projection = v.dot(this.mFaceNormal[i]);
+    if (projection > 0) {
+      bestDistance = projection;
+      nearestEdge = i;
+      inside = false;
+      break;
+    }
+
+    if (projection > bestDistance) {
+      bestDistance = projection;
+      nearestEdge = i;
+    }
+  }
+
+  if (!inside) {
+    // check R1
+    let v1 = otherCirc.mCenter.subtract(this.mVertex[nearestEdge]);
+    let v2 = this.mVertex[(nearestEdge + 1) % 4].subtract(this.mVertex[nearestEdge]);
+    const dot = v1.dot(v2);
+    if (dot < 0) {
+      const dist = v1.length();
+      if (dist > otherCirc.mRadius) {
+        return false;
+      }
+      const normal = v1.normalize();
+      const radiusVec = normal.scale(-otherCirc.mRadius);
+      collisionInfo.setInfo(otherCirc.mRadius - dist, normal, otherCirc.mCenter.add(radiusVec));
+    } else {
+      // check R2
+      v1 = otherCirc.mCenter.subtract(this.mVertex[(nearestEdge + 1) % 4]);
+      v2 = v2.scale(-1);
+      const dot = v1.dot(v2);
+      if (dot < 0) {
+        const dist = v1.length();
+        if (dist > otherCirc.mRadius) {
+          return false;
+        }
+        const normal = v1.normalize();
+        const radiusVec = normal.scale(-otherCirc.mRadius);
+        collisionInfo.setInfo(otherCirc.mRadius - dist, normal, otherCirc.mCenter.add(radiusVec));
+      } else {
+        // check R3
+        if (bestDistance < otherCirc.mRadius) {
+          const rediusVec = this.mFaceNormal[nearestEdge].scale(otherCirc.mRadius);
+          collisionInfo.setInfo(otherCirc.mRadius - bestDistance, this.mFaceNormal[nearestEdge], otherCirc.mCenter.subtract(rediusVec))
+        } else {
+          return false;
+        }
+      }
+    }
+  } else {
+    const radiusVec = this.mFaceNormal[nearestEdge].scale(otherCirc.mRadius);
+    collisionInfo.setInfo(otherCirc.mRadius - bestDistance, this.mFaceNormal[nearestEdge], otherCirc.mCenter.subtract(radiusVec));
+  }
+  return true;
 }
 
 Rectangle.prototype.collidedRectRect = function(r1, r2, collisionInfo) {

@@ -8,13 +8,12 @@
     "build": "webpack",
     "watch": "webpack --watch --info-verbosity verbose"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Andriy",
+  "license": "MIT",
   "devDependencies": {
     "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1"
-  },
-  "dependencies": {
+    "webpack-cli": "^3.2.1",
     "html-webpack-plugin": "^3.2.0"
-  }
+  },
+  "dependencies": {}
 }

@@ -40,6 +40,9 @@ Circle.prototype.collisionTest = function (otherShape, collisionInfo) {
   if (otherShape.mType === 'Circle') {
     return this.collidedCircCirc(this, otherShape, collisionInfo);
   }
+  if (otherShape.mType === 'Rectangle') {
+    return otherShape.collidedRectCirc(this, collisionInfo);
+  }
   return false;
 }
 
