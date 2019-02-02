@@ -13,7 +13,7 @@ function drawCollisionInfo(collisionInfo, context) {
 module.exports = {
     collision() {
       const collisionInfo = new CollisionInfo();
-      for (let i = 4; i < gEngine.Core.mAllObjects.length; i++) {
+      for (let i = 0; i < gEngine.Core.mAllObjects.length; i++) {
         for (let j = i + 1; j < gEngine.Core.mAllObjects.length; j++) {
           if (gEngine.Core.mAllObjects[i].boundTest(gEngine.Core.mAllObjects[j])) {
             if (gEngine.Core.mAllObjects[i].collisionTest(gEngine.Core.mAllObjects[j], collisionInfo)) {

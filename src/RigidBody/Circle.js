@@ -1,13 +1,14 @@
 const RigidShape = require("./RigidShape");
 const Vec2 = require('../Lib/Vec2');
 
-const Circle = function(center, radius, fix) {
-  RigidShape.call(this, center);
+const Circle = function(center, radius, mass, friction, restitution) {
+  RigidShape.call(this, center, radius, mass, friction, restitution);
   this.mBoundRadius = radius;
   this.mType = "Circle";
   this.mRadius = radius;
 
   this.mStartpoint = new Vec2(center.x, center.y - radius);
+  this.updateInertia();
 };
 
 var prototype = Object.create(RigidShape.prototype);
@@ -68,6 +69,13 @@ Circle.prototype.collidedCircCirc = function(c1, c2, collisionInfo) {
     }
   }
   return true
+}
+Circle.prototype.updateInertia = function () {
+  if (this.mInvMass === 0) {
+    this.mInertia = 0;
+  } else {
+    this.mInertia = (1 / this.mInvMass) * (this.mRadius * this.mRadius) / 12;
+  }
 }
 
 module.exports = Circle;

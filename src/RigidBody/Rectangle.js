@@ -2,9 +2,8 @@ const RigidShape = require("./RigidShape");
 const Vec2 = require('../Lib/Vec2');
 const CollisionInfo = require('../Lib/CollisionInfo');
 
-
-const Rectangle = function(center, width, height, fix) {
-  RigidShape.call(this, center);
+const Rectangle = function(center, width, height, radius, mass, friction, restitution) {
+  RigidShape.call(this, center, radius, mass, friction, restitution);
   this.mType = "Rectangle";
   this.mWidth = width;
   this.mHeight = height;
@@ -21,6 +20,8 @@ const Rectangle = function(center, width, height, fix) {
   this.mFaceNormal.push(this.mVertex[2].subtract(this.mVertex[3]).normalize());
   this.mFaceNormal.push(this.mVertex[3].subtract(this.mVertex[0]).normalize());
   this.mFaceNormal.push(this.mVertex[0].subtract(this.mVertex[1]).normalize());
+
+  this.updateInertia();
 }
 
 var prototype = Object.create(RigidShape.prototype);
@@ -202,6 +203,15 @@ Rectangle.prototype.findAxisLeastPenetration = function (otherRect, collisionInf
     collisionInfo.setInfo(bestDistance, this.mFaceNormal[bestIndex], supportPoint.add(bestVec));
   }
   return hasSupport;
+}
+
+Rectangle.prototype.updateInertia = function () {
+  if (this.mInvMass === 0) {
+    this.mInertia = 0;
+  } else {
+    this.mInertia = (1 / this.mInvMass) * (this.mWidth * this.mWidth + this.mHeight * this.mHeight) / 12;
+    this.mInertia = 1 / this.mInertia;
+  }
 }
 
 module.exports = Rectangle;
